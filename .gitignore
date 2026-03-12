@@ -30,3 +30,20 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Configuration files (local config, avoid committing sensitive info)
+config.yaml
+config-*.yaml
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
