@@ -1,0 +1,23 @@
+# 服务器基础配置(Basic server configuration)
+[server]
+  # http服务
+  # 服务器监听地址和端口(Server listening address and port)
+  ip = "0.0.0.0"
+  port = 8080
+
+[transport]
+  # WebSocket传输层
+  [transport.websocket]
+    enabled = true
+    ip = "0.0.0.0"
+    port = 8000
+
+[log]
+  # 设置控制台输出的日志格式，时间、日志级别、标签、消息
+  log_format = "{time:YYYY-MM-DD HH:mm:ss} - {level} - {message}"
+  # 设置日志等级：INFO、DEBUG
+  log_level = "INFO"
+  # 设置日志路径
+  log_dir = "logs"
+  # 设置日志文件
+  log_file = "server.log"

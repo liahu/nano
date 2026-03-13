@@ -157,7 +157,7 @@
 
 
 #项目技术要求
-    框架： gin
+    框架： gin-gonic/gin
 
     日志：log/slog
         日志需要有一个traceID，便于跟踪，traceID的生成，要和用户id有关系。

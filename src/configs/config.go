@@ -1,11 +1,67 @@
 package configs
 
-/*
-本文件主要用于解析配置文件，
-并将配置信息存储在全局变量中，
-供其他模块使用。配置文件暂时都是本地的，无法修改，
-后续会考虑添加远程配置中心的支持。
+import (
+	"fmt"
+	"os"
 
-目前读取的文件是在项目根目录下的config.toml文件。
+	"github.com/BurntSushi/toml"
+)
 
-*/
+// Config 配置结构体
+type Config struct {
+	Server    ServerConfig    `toml:"server"`
+	Transport TransportConfig `toml:"transport"`
+	Log       LogConfig       `toml:"log"`
+}
+
+// ServerConfig 服务器配置
+type ServerConfig struct {
+	IP   string `toml:"ip"`
+	Port int    `toml:"port"`
+}
+
+// TransportConfig 传输配置
+type TransportConfig struct {
+	WebSocket WebSocketConfig `toml:"websocket"`
+}
+
+// WebSocketConfig WebSocket配置
+type WebSocketConfig struct {
+	Enabled bool   `toml:"enabled"`
+	IP      string `toml:"ip"`
+	Port    int    `toml:"port"`
+}
+
+// LogConfig 日志配置
+type LogConfig struct {
+	LogFormat string `toml:"log_format"`
+	LogLevel  string `toml:"log_level"`
+	LogDir    string `toml:"log_dir"`
+	LogFile   string `toml:"log_file"`
+}
+
+// AppConfig 全局配置实例
+var AppConfig *Config
+
+// LoadConfig 加载配置文件
+func LoadConfig(filePath string) error {
+	// 读取配置文件
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("读取配置文件失败: %v", err)
+	}
+
+	// 解析配置
+	config := &Config{}
+	if err := toml.Unmarshal(content, config); err != nil {
+		return fmt.Errorf("解析配置文件失败: %v", err)
+	}
+
+	AppConfig = config
+	return nil
+}
+
+// GetConfig 获取配置实例
+func GetConfig() *Config {
+	return AppConfig
+}

@@ -1,0 +1,37 @@
+# 服务器基础配置(Basic server configuration)
+server:
+  # 服务器监听地址和端口(Server listening address and port)
+  ip: 0.0.0.0
+  port: 8080
+  token: "你的token" # 服务器访问令牌
+  # 认证配置
+  auth:
+    # 是否启用认证
+    enabled: false
+    # 认证存储配置
+    store:
+      type: memory # memory/file/redis
+      expiry: 24 # 过期时间(小时)
+    # 允许的设备ID列表
+    allowed_devices: []
+    # 有效的token列表
+    tokens: []
+
+
+
+transport:
+  # WebSocket传输层
+  websocket:
+    enabled: true
+    ip: "0.0.0.0"
+    port: 8000
+
+log:
+  # 设置控制台输出的日志格式，时间、日志级别、标签、消息
+  log_format: "{time:YYYY-MM-DD HH:mm:ss} - {level} - {message}"
+  # 设置日志等级：INFO、DEBUG
+  log_level: INFO
+  # 设置日志路径
+  log_dir: logs
+  # 设置日志文件
+  log_file: "server.log"

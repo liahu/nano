@@ -3,10 +3,12 @@ package utils
 import (
 	"context"
 	"crypto/md5"
+	"crypto/rand"
 	"encoding/hex"
 	"strconv"
 	"time"
 
+	"nano/src/configs"
 	"nano/src/utils/mlog"
 )
 
@@ -17,21 +19,32 @@ var (
 
 // InitLog 初始化日志系统
 func InitLog() error {
-	// 配置日志
-	config := &mlog.LogCfg{
-		LogLevel: "info",
-		LogDir:   "./logs",
-		LogFile:  "server.log",
+	// 从配置文件获取日志配置
+	config := configs.GetConfig()
+	logConfig := &mlog.LogCfg{
+		LogLevel: config.Log.LogLevel,
+		LogDir:   config.Log.LogDir,
+		LogFile:  config.Log.LogFile,
 	}
 
 	// 使用mlog的NewLogger
-	logger, err := mlog.NewLogger(config)
+	logger, err := mlog.NewLogger(logConfig)
 	if err != nil {
 		return err
 	}
 
 	Log = logger
 	return nil
+}
+
+// GenerateUUID 生成UUID
+func GenerateUUID() string {
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
+		return ""
+	}
+	return hex.EncodeToString(b)
 }
 
 // WithTraceID 添加上下文traceID
