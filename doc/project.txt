@@ -169,6 +169,8 @@
 
     链接方式：gorm.io/gorm
 
+    db的模式用repository以保证扩展性
+
     table：
         user：
             用户id
