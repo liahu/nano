@@ -161,6 +161,24 @@
 
     日志：log/slog
         日志需要有一个traceID，便于跟踪，traceID的生成，要和用户id有关系。
+        实现方式：封装mlog包，提供统一的日志接口，支持文件和控制台输出，支持日志轮转。
+
+    项目结构：
+        src/
+        ├── api/             # API接口层
+        │   ├── handlers/    # 请求处理器
+        │   ├── middlewares/ # 中间件
+        │   └── routes/      # 路由定义
+        ├── services/        # 业务逻辑层
+        ├── models/          # 数据模型
+        ├── db/              # 数据库操作
+        │   ├── db.go        # 数据库连接管理
+        │   └── repositories/ # 数据访问层（Repository模式）
+        ├── configs/         # 配置管理
+        ├── utils/           # 工具函数
+        │   ├── mlog/        # 日志系统
+        │   └── log.go       # 日志接口
+        └── main.go          # 应用入口
 
 
 
@@ -169,22 +187,28 @@
 
     链接方式：gorm.io/gorm
 
-    db的模式用repository以保证扩展性
+    设计模式：Repository模式
+        实现方式：db包提供NewDB()函数创建数据库连接，repositories包通过依赖注入方式接受db对象，实现数据访问逻辑。
+        优势：避免导入循环，支持依赖注入，便于测试和扩展。
 
     table：
         user：
-            用户id
-            用户名
-            手机号
-            微信号
-            激活时间
+            id (primary key, varchar(36))
+            username (varchar(50), not null)
+            phone (varchar(20), unique, not null)
+            wechat (varchar(50))
+            password (varchar(100), not null)
+            created_at (datetime)
+            updated_at (datetime)
 
         device：
-            设备id
-            设备版本号
-            设备状态
-            userid
-            激活时间
+            id (primary key, varchar(36))
+            version (varchar(20), not null)
+            status (varchar(20), not null, default: 'inactive')
+            user_id (varchar(36), index)
+            secret (varchar(100), not null)
+            created_at (datetime)
+            updated_at (datetime)
 
 
 #配置：
