@@ -13,18 +13,147 @@
     - 提供机器人端WebSocket接口：实时语音识别等双向通信场景
 
 
-#http接口：
-    账号注册
-    账号登录
-    账号和设备关联
-    设备管理
-    账号管理
-    admin后台gm管理
-    ota版本查询
-    ota版本下载
+#HTTP接口：
+    App端接口：
+        账号管理：
+            账号注册
+                Method: POST
+                URL: /api/v1/users/register
+                Body: {"username": "string", "phone": "string", "password": "string", "wechat": "string"}
+                响应：{"token": "string"}（注册成功即登录成功） jwt
+            账号登录
+                Method: POST
+                URL: /api/v1/users/login
+                Body: {"phone": "string", "password": "string"}
+                响应：{"token": "string"} jwt
+            账号信息查询
+                Method: GET
+                URL: /api/v1/users/info
+                说明：需要携带用户Token
+            账号信息修改
+                Method: POST
+                URL: /api/v1/users/info
+                Body: {"username": "string", "password": "string", "wechat": "string"}
+                说明：需要携带用户Token
+        
+        设备管理：
+            设备绑定（建立账号-设备关联）
+                Method: POST
+                URL: /api/v1/devices/bind
+                Body: {"device_id": "string"}
+                说明：需要携带用户Token
+            设备解绑（解除账号-设备关联）
+                Method: POST
+                URL: /api/v1/devices/unbind
+                Body: {"device_id": "string"}
+                说明：需要携带用户Token
+            绑定设备列表
+                Method: GET
+                URL: /api/v1/devices
+                说明：需要携带用户Token
+            设备详情
+                Method: GET
+                URL: /api/v1/devices/{device_id}
+                说明：需要携带用户Token
+            设备控制
+                Method: POST
+                URL: /api/v1/devices/{device_id}/control
+                Body: {"command": "string", "params": {"key": "value"}}
+                说明：需要携带用户Token
+            设备信息修改
+                Method: POST
+                URL: /api/v1/devices/{device_id}
+                Body: {"name": "string"}
+                说明：需要携带用户Token
+        
+        OTA管理：
+            最新OTA版本查询
+                Method: GET
+                URL: /api/v1/ota/latest
+                说明：需要携带用户Token
+            设备OTA版本查询
+                Method: GET
+                URL: /api/v1/devices/{device_id}/ota
+                说明：需要携带用户Token
+            设备OTA升级
+                Method: POST
+                URL: /api/v1/devices/{device_id}/ota/upgrade
+                Body: {"version": "string"}
+                说明：需要携带用户Token
+    
+    机器人端接口：
+        设备注册
+            Method: POST
+            URL: /api/v1/devices/register
+            Body: {"hardware_id": "string", "version": "string"}
+            响应：{"device_id": "string", "secret": "string"}
+        设备状态上报
+            Method: POST
+            URL: /api/v1/devices/status
+            Body: {"status": "string", "battery": number, "version": "string"}
+            说明：需要携带Device-ID和Signature
+        OTA版本查询 （可能不需要）
+            Method: GET
+            URL: /api/v1/ota/check
+            说明：需要携带Device-ID和Signature
+        OTA版本下载
+            Method: GET
+            URL: /api/v1/ota/download/{version}
+            说明：需要携带Device-ID和Signature
+        升级状态上报
+            Method: POST
+            URL: /api/v1/devices/ota/status
+            Body: {"status": "string", "progress": number, "error": "string"}
+            说明：需要携带Device-ID和Signature
+    
+    Admin后台接口：
+        用户管理：
+            用户信息查询
+                Method: GET
+                URL: /api/v1/admin/users
+                说明：需要Admin Token
+            用户管理（增删改）
+                Method: POST
+                URL: /api/v1/admin/users
+                Body: {"action": "create|update|delete", "user": {"id": "string", "username": "string", "phone": "string"}}
+                说明：需要Admin Token
+        设备管理：
+            设备信息查询
+                Method: GET
+                URL: /api/v1/admin/devices
+                说明：需要Admin Token
+            设备管理（增删改）
+                Method: POST
+                URL: /api/v1/admin/devices
+                Body: {"action": "create|update|delete", "device": {"id": "string", "version": "string", "user_id": "string"}}
+                说明：需要Admin Token
+        OTA管理：
+            OTA版本上传
+                Method: POST
+                URL: /api/v1/admin/ota/upload
+                Body: multipart/form-data (包含bin文件和版本信息)
+                说明：需要Admin Token
+            OTA版本管理
+                Method: POST
+                URL: /api/v1/admin/ota
+                Body: {"action": "publish|unpublish", "version": "string"}
+                说明：需要Admin Token
+            OTA版本列表
+                Method: GET
+                URL: /api/v1/admin/ota
+                说明：需要Admin Token
+
 
 #websocket接口：
-    语音识别
+    机器人端发起：
+        建立连接
+        发送语音
+
+    服务端发起：
+        推送控制指令（包含动作控制和OTA）
+        推动语音流的回复
+        
+
 
 
 #项目技术要求
